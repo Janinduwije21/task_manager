@@ -13,3 +13,9 @@ def gui_view_tasks():
     if not display:
         display = "No tasks available."
     messagebox.showinfo("Task List", display)
+
+def gui_update_task():
+    core.update_task()
+
+def gui_delete_task():
+    core.delete_task()
