@@ -1,9 +1,46 @@
 import tkinter as tk
 from tkinter import messagebox
-import task_manager_main as core
+import task_manger_main as core
 
 def gui_add_task():
-    core.add_task()
+    def save_task():
+        name = name_entry.get()
+        desc = desc_entry.get()
+        priority = priority_var.get()
+        due_date = date_entry.get()
+
+        if not name or not desc or not priority or not due_date:
+            messagebox.showerror("Error", "All fields are required.")
+            return
+
+        task = [name, desc, priority.lower(), due_date]
+        core.tasks.append(task)
+        core.save_tasks_to_file()
+        messagebox.showinfo("Success", "Task added successfully!")
+        add_window.destroy()
+
+    add_window = tk.Toplevel()
+    add_window.title("Add Task")
+    add_window.geometry("300x300")
+
+    tk.Label(add_window, text="Task Name").pack()
+    name_entry = tk.Entry(add_window, width=30)
+    name_entry.pack()
+
+    tk.Label(add_window, text="Description").pack()
+    desc_entry = tk.Entry(add_window, width=30)
+    desc_entry.pack()
+
+    tk.Label(add_window, text="Priority").pack()
+    priority_var = tk.StringVar()
+    priority_menu = tk.OptionMenu(add_window, priority_var, "High", "Medium", "Low")
+    priority_menu.pack()
+
+    tk.Label(add_window, text="Due Date (YYYY-MM-DD)").pack()
+    date_entry = tk.Entry(add_window, width=30)
+    date_entry.pack()
+
+    tk.Button(add_window, text="Save Task", command=save_task).pack(pady=10)
 
 def gui_view_tasks():
     core.load_tasks_from_file()
@@ -36,5 +73,5 @@ def start_gui():
     core.load_tasks_from_file()
     window.mainloop()
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     start_gui()

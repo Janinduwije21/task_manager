@@ -112,7 +112,7 @@ def delete_task():
         print("Invalid task number!")
 
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     load_tasks_from_file()
     while True:
         menu = """
