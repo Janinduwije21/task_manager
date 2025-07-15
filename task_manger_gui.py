@@ -122,7 +122,30 @@ def gui_update_task():
 
 
 def gui_delete_task():
-    core.delete_task()
+    core.load_tasks_from_file()
+
+    def delete_selected():
+        try:
+            index = int(task_number_entry.get()) - 1
+            if index < 0 or index >= len(core.tasks):
+                raise IndexError
+            deleted = core.tasks.pop(index)
+            core.save_tasks_to_file()
+            messagebox.showinfo("Deleted", f"Deleted task: {deleted[0]}")
+            delete_window.destroy()
+        except:
+            messagebox.showerror("Error", "Invalid task number.")
+
+    delete_window = tk.Toplevel()
+    delete_window.title("Delete Task")
+    delete_window.geometry("300x150")
+
+    tk.Label(delete_window, text="Enter Task Number to Delete").pack(pady=10)
+    task_number_entry = tk.Entry(delete_window, width=30)
+    task_number_entry.pack()
+
+    tk.Button(delete_window, text="Delete Task", command=delete_selected).pack(pady=10)
+
 
 def start_gui():
     window = tk.Tk()
