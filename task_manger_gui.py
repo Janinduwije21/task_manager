@@ -52,7 +52,74 @@ def gui_view_tasks():
     messagebox.showinfo("Task List", display)
 
 def gui_update_task():
-    core.update_task()
+    core.load_tasks_from_file()
+
+    def load_task():
+        try:
+            index = int(task_number_entry.get()) - 1
+            if index < 0 or index >= len(core.tasks):
+                raise IndexError
+            task = core.tasks[index]
+
+            name_entry.delete(0, tk.END)
+            name_entry.insert(0, task[0])
+            desc_entry.delete(0, tk.END)
+            desc_entry.insert(0, task[1])
+            priority_var.set(task[2].capitalize())
+            date_entry.delete(0, tk.END)
+            date_entry.insert(0, task[3])
+        except:
+            messagebox.showerror("Error", "Invalid task number.")
+
+    def save_update():
+        index = int(task_number_entry.get()) - 1
+        if index < 0 or index >= len(core.tasks):
+            messagebox.showerror("Error", "Invalid task number.")
+            return
+
+        name = name_entry.get()
+        desc = desc_entry.get()
+        priority = priority_var.get()
+        due_date = date_entry.get()
+
+        if not name or not desc or not priority or not due_date:
+            messagebox.showerror("Error", "All fields are required.")
+            return
+
+        core.tasks[index] = [name, desc, priority.lower(), due_date]
+        core.save_tasks_to_file()
+        messagebox.showinfo("Success", "Task updated successfully!")
+        update_window.destroy()
+
+    update_window = tk.Toplevel()
+    update_window.title("Update Task")
+    update_window.geometry("300x400")
+
+    tk.Label(update_window, text="Enter Task Number to Update").pack()
+    task_number_entry = tk.Entry(update_window, width=30)
+    task_number_entry.pack()
+
+    tk.Button(update_window, text="Load Task", command=load_task).pack(pady=5)
+
+    tk.Label(update_window, text="Task Name").pack()
+    name_entry = tk.Entry(update_window, width=30)
+    name_entry.pack()
+
+    tk.Label(update_window, text="Description").pack()
+    desc_entry = tk.Entry(update_window, width=30)
+    desc_entry.pack()
+
+    tk.Label(update_window, text="Priority").pack()
+    priority_var = tk.StringVar()
+    priority_menu = tk.OptionMenu(update_window, priority_var, "High", "Medium", "Low")
+    priority_menu.pack()
+
+    tk.Label(update_window, text="Due Date (YYYY-MM-DD)").pack()
+    date_entry = tk.Entry(update_window, width=30)
+    date_entry.pack()
+
+    tk.Button(update_window, text="Save Update", command=save_update).pack(pady=10)
+
 
 def gui_delete_task():
     core.delete_task()
