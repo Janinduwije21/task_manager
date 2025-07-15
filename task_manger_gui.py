@@ -19,3 +19,19 @@ def gui_update_task():
 
 def gui_delete_task():
     core.delete_task()
+
+def start_gui():
+    window = tk.Tk()
+    window.title("Task Manager")
+    window.geometry("300x300")
+
+    tk.Label(window, text="Task Manager GUI", font=("Arial", 16)).pack(pady=10)
+
+    tk.Button(window, text="Add Task", width=20, command=gui_add_task).pack(pady=5)
+    tk.Button(window, text="View Tasks", width=20, command=gui_view_tasks).pack(pady=5)
+    tk.Button(window, text="Update Task", width=20, command=gui_update_task).pack(pady=5)
+    tk.Button(window, text="Delete Task", width=20, command=gui_delete_task).pack(pady=5)
+    tk.Button(window, text="Exit", width=20, command=window.destroy).pack(pady=20)
+
+    core.load_tasks_from_file()
+    window.mainloop()
