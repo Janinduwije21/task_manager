@@ -35,3 +35,6 @@ def start_gui():
 
     core.load_tasks_from_file()
     window.mainloop()
+
+if __name__ == "_main_":
+    start_gui()
